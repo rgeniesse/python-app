@@ -1,5 +1,5 @@
 # Secrets
-password.txt
+/db/password.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
