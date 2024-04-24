@@ -5,46 +5,19 @@ import os
 
 app = Flask(__name__)
 
-if 'POSTGRES_PASSWORD_FILE' in os.environ:
-   with open(os.environ['POSTGRES_PASSWORD_FILE'], 'r') as f:
-       password = f.read().strip()
-else:
-   password = os.environ['POSTGRES_PASSWORD']
-
 @app.route('/')
 def hello_world():
     return 'Hello, Docker my old friend!'
 
 
 @app.route('/widgets')
-def get_widgets():
-    with psycopg2.connect(host="db", user="postgres", password=password, database="example") as conn:
-        with conn.cursor() as cur:
-            cur.execute("SELECT * FROM widgets")
-            row_headers = [x[0] for x in cur.description]
-            results = cur.fetchall()
-    conn.close()
-
-    json_data = [dict(zip(row_headers, result)) for result in results]
-    return json.dumps(json_data)
+def hello_world_widgets():
+    return 'Hello, Widgets my old friend!'
 
 
 @app.route('/initdb')
-def db_init():
-    conn = psycopg2.connect(host="db", user="postgres", password=password)
-    conn.set_session(autocommit=True)
-    with conn.cursor() as cur:
-        cur.execute("DROP DATABASE IF EXISTS example")
-        cur.execute("CREATE DATABASE example")
-    conn.close()
-
-    with psycopg2.connect(host="db", user="postgres", password=password, database="example") as conn:
-        with conn.cursor() as cur:
-            cur.execute("DROP TABLE IF EXISTS widgets")
-            cur.execute("CREATE TABLE widgets (name VARCHAR(255), description VARCHAR(255))")
-    conn.close()
-
-    return 'init database'
+def hello_world_initdb():
+    return 'Hello, initdb my old friend!'
 
 
 if __name__ == "__main__":
